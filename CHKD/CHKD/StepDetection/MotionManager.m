@@ -320,9 +320,12 @@ double roundToDecimals(const double x, const int numDecimals) {
                     NSLog(@"duration :%f",duration);
                     indexReadings = [NSString stringWithFormat:@"%@\n%f\t%f\t%f",indexReadings,minimum.index,maximum.index,previousSample.index];
                     //TO-DO Calculate angle here in future. Consider peakreading(Maximum) - previous sample(current minimum) to be small and measure angle
-//                  [self.stepDelegate strideDetectedWithCount:strideCount andDuration:duration];
+                  [self.stepDelegate strideDetectedWithCount:strideCount andDuration:duration];
                     double angleCalculated = [self calculateAngle];
-                    [self.stepDelegate strideDetectedWithCount:strideCount duration:duration andAngle:angleCalculated];
+                    //[self.stepDelegate strideDetectedWithCount:strideCount duration:duration andAngle:angleCalculated];
+                   [self.stepDelegate strideDetectedWithCount:strideCount duration:duration andAngle:angleCalculated];
+                    
+                    
                     [self resetReferenceFrameIfRequired];
                     strideCount++;
                 }
@@ -455,8 +458,11 @@ static double filterloopAccel(double input)
     currentHeading = currentHeading - self.prevHeading;
     self.prevHeading = tempCurrent;
     
-    if((currentHeading < 8  && currentHeading > 0 ) || (currentHeading > -8 && currentHeading < 0))
-        currentHeading = 0;
+    
+    // Removed by Bharath to disable angle correction
+    
+    //if((currentHeading < 8  && currentHeading > 0 ) || (currentHeading > -8 && currentHeading < 0))
+      //  currentHeading = 0;
 
     
     /*

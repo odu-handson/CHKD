@@ -43,6 +43,8 @@
 		CAE7E90719FF218C007C8F70 /* DemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CAE7E90619FF218C007C8F70 /* DemoViewController.m */; };
 		CAFAD90B19C883B1007648C1 /* MotionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CAFAD90A19C883B1007648C1 /* MotionViewController.m */; };
 		CAFAD90E19C898DB007648C1 /* TrainingInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CAFAD90D19C898DB007648C1 /* TrainingInfo.m */; };
+		DA0C3A9B1AD375DB000BB30E /* Locations.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0C3A9A1AD375DB000BB30E /* Locations.m */; };
+		DA0C3A9F1AD3789D000BB30E /* IQDropDownTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0C3A9E1AD3789D000BB30E /* IQDropDownTextField.m */; };
 		DA84A5291A9AC57F00C192CF /* chkd.png in Resources */ = {isa = PBXBuildFile; fileRef = DA84A5281A9AC57F00C192CF /* chkd.png */; };
 		DA84A52C1A9ADEB100C192CF /* RegistrationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DA84A52B1A9ADEB100C192CF /* RegistrationTableViewCell.m */; };
 		DA84A52E1A9C0FC400C192CF /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA84A52D1A9C0FC400C192CF /* CoreData.framework */; };
@@ -123,6 +125,10 @@
 		CAFAD90A19C883B1007648C1 /* MotionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MotionViewController.m; sourceTree = "<group>"; };
 		CAFAD90C19C898DB007648C1 /* TrainingInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrainingInfo.h; sourceTree = "<group>"; };
 		CAFAD90D19C898DB007648C1 /* TrainingInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrainingInfo.m; sourceTree = "<group>"; };
+		DA0C3A991AD375DB000BB30E /* Locations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Locations.h; sourceTree = "<group>"; };
+		DA0C3A9A1AD375DB000BB30E /* Locations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Locations.m; sourceTree = "<group>"; };
+		DA0C3A9D1AD3789D000BB30E /* IQDropDownTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQDropDownTextField.h; sourceTree = "<group>"; };
+		DA0C3A9E1AD3789D000BB30E /* IQDropDownTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQDropDownTextField.m; sourceTree = "<group>"; };
 		DA84A5281A9AC57F00C192CF /* chkd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chkd.png; sourceTree = "<group>"; };
 		DA84A52A1A9ADEB100C192CF /* RegistrationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegistrationTableViewCell.h; sourceTree = "<group>"; };
 		DA84A52B1A9ADEB100C192CF /* RegistrationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegistrationTableViewCell.m; sourceTree = "<group>"; };
@@ -252,6 +258,7 @@
 		CACDB88F19C74875001F9ABD /* CHKD */ = {
 			isa = PBXGroup;
 			children = (
+				DA0C3A9C1AD3789D000BB30E /* IQDropDownTextField */,
 				DA84A5271A9AC57F00C192CF /* Images */,
 				CA7CFFB11A92F0DD003E12C6 /* Bluetooth */,
 				41FF333B1A27A55100D7D54F /* VolumeControls */,
@@ -332,6 +339,8 @@
 				CAE7E8F819FE21B2007C8F70 /* UserData.m */,
 				DA84A5331A9C1A6400C192CF /* WalkAndBeaconData.h */,
 				DA84A5341A9C1A6400C192CF /* WalkAndBeaconData.m */,
+				DA0C3A991AD375DB000BB30E /* Locations.h */,
+				DA0C3A9A1AD375DB000BB30E /* Locations.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -352,6 +361,15 @@
 				CAE7E90619FF218C007C8F70 /* DemoViewController.m */,
 			);
 			name = Demo;
+			sourceTree = "<group>";
+		};
+		DA0C3A9C1AD3789D000BB30E /* IQDropDownTextField */ = {
+			isa = PBXGroup;
+			children = (
+				DA0C3A9D1AD3789D000BB30E /* IQDropDownTextField.h */,
+				DA0C3A9E1AD3789D000BB30E /* IQDropDownTextField.m */,
+			);
+			path = IQDropDownTextField;
 			sourceTree = "<group>";
 		};
 		DA84A5271A9AC57F00C192CF /* Images */ = {
@@ -532,7 +550,9 @@
 				CA44D0E91A959A5000DD17AF /* LoginViewController.m in Sources */,
 				DA84A5351A9C1A6400C192CF /* WalkAndBeaconData.m in Sources */,
 				CACDB89A19C74875001F9ABD /* AppDelegate.m in Sources */,
+				DA0C3A9B1AD375DB000BB30E /* Locations.m in Sources */,
 				CAFAD90B19C883B1007648C1 /* MotionViewController.m in Sources */,
+				DA0C3A9F1AD3789D000BB30E /* IQDropDownTextField.m in Sources */,
 				CACDB89619C74875001F9ABD /* main.m in Sources */,
 				CA44D0EC1A959AC900DD17AF /* RegistrationViewController.m in Sources */,
 				CAE7E8F919FE21B2007C8F70 /* UserData.m in Sources */,

@@ -44,8 +44,19 @@
 @property (nonatomic, assign) double y2;
 @property (nonatomic, assign) double y3;
 
+
+@property (nonatomic,assign) NSString *userId;
+@property (nonatomic,assign) NSDate *createdAt;
+@property (nonatomic,assign) NSDate *updatedAt;
+@property (nonatomic,strong) NSMutableArray *locations;
+
+
 - (void)saveA:(double)A;
 - (void)saveB:(double)B;
 - (void)saveC:(double)C;
+
+- (void)saveUserId:(NSString *) userId;
+- (void)saveCreatedAt:(NSDate *)createdAt;
+- (void)saveUpdatedAt:(NSDate *)updatedAt;
 
 @end

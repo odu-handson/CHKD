@@ -323,7 +323,6 @@ mach_timebase_info_data_t info;
     [parameters setObject:@"2" forKey:@"walk_model_id"];
     
     return parameters;
-    
 }
 
 
@@ -404,6 +403,25 @@ mach_timebase_info_data_t info;
     {
         AudioServicesPlaySystemSound(1007);
     }
+}
+
+- (void)strideDetectedWithCount:(int)stride_count duration:(double)duration andAngle:(double)angle
+{
+    if(stride_count)
+    {
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            //Do any updates to your label here
+            self.lblStepCount.text = [NSString stringWithFormat:@"%d",stride_count];
+        }];
+        [self.timeStamps addObject:[NSString stringWithFormat:@"%f",duration]];
+        
+    }
+    else
+    {
+        //[self calculateDistanceForCurrentStepWithTime:duration andAngle:angle];
+        AudioServicesPlaySystemSound(1007);
+    }
+    
 }
 
 

@@ -71,4 +71,45 @@
     return returnVal;
 }
 
+-(void) saveCreatedAt:(NSDate *)createdAt
+{
+    
+    [self.defaults setObject:createdAt forKey:@"createdAt"];
+    self.createdAt = createdAt;
+    
+}
+-(NSDate *) createdAt
+{
+    NSDate *createdAt = (NSDate *)[self.defaults objectForKey:@"createdAt"];
+    return createdAt;
+}
+
+-(void) saveUpdatedAt:(NSDate *)updatedAt
+{
+    
+    [self.defaults setObject:updatedAt forKey:@"updatedAt"];
+    self.updatedAt = updatedAt;
+
+    
+}
+-(NSDate *) updatedAt
+{
+    NSDate *updatedAt = (NSDate *)[self.defaults objectForKey:@"updatedAt"];
+    return updatedAt;
+}
+
+-(void) saveUserId:(NSString *)userId
+{
+    [self.defaults setObject:userId forKey:@"userId"];
+    self.userId = userId;
+
+}
+-(NSString *) userId
+{
+    NSString *userId = [self.defaults objectForKey:@"userId"];
+    return userId;
+}
+
+
+
 @end

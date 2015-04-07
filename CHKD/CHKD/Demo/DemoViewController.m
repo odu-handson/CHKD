@@ -18,19 +18,25 @@
 #import "BluetoothBeacon.h"
 #import <CoreLocation/CoreLocation.h>
 #import "AppDelegate.h"
+#import "IQDropDownTextField.h"
+#import "Locations.h"
 
 //Nano second precision
 #define timeUnit 1000000000
 #define quadratic @"2"
 #define linear @"1"
 
-@interface DemoViewController () <StepDetectionProtocol,ServiceProtocol,CLLocationManagerDelegate>
+@interface DemoViewController () <StepDetectionProtocol,ServiceProtocol,CLLocationManagerDelegate,UITextFieldDelegate>
 
 @property (nonatomic, weak) IBOutlet UILabel    *lblSteps;
 @property (nonatomic, weak) IBOutlet UITextView *txtStepDistance;
 @property (nonatomic, weak) IBOutlet UIButton   *btnStartStop;
 @property (nonatomic, weak) IBOutlet UILabel    *lblTotalDistance;
+@property (weak, nonatomic) IBOutlet  IQDropDownTextField *txtLocations;
 
+
+@property (nonatomic, strong) NSString          *locationId;
+@property (nonatomic, strong) NSString          *mapId;
 @property (nonatomic, strong) UserData          *userData;
 @property (nonatomic, strong) NSMutableArray    *elapsedTimestamps;
 @property (nonatomic, strong) NSMutableArray    *anglesMeasured;
@@ -45,6 +51,7 @@
 @property (nonatomic,strong) BluetoothBeacon *beaconDetails;
 @property (nonatomic,strong) NSMutableDictionary *totalDataDictionary;
 @property (nonatomic,strong) NSMutableArray *totalDataList;
+
 
 @property (nonatomic, strong) NSUserDefaults *defaults;
 @property (nonatomic,strong) NSString *walkId;
@@ -101,8 +108,6 @@ int processedIndex;
     return  _serviceManager;
 }
 
-
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -115,17 +120,30 @@ int processedIndex;
     [self prepareButtonStealer];
     [self prepareUI];
     [self fetchConstants];
-   
+    
+    [self prepareTextField];
+    self.btnStartStop.alpha = 0;
+    self.txtLocations.delegate = self;
+    
     self.totalDataList = [[NSMutableArray alloc] init];
 
-    NSMutableDictionary * dict = [self prepareParametersToInitiateWalk];
-    [self.serviceManager postRequestCallWithURL:@"http://128.82.5.142:8080/walks" andParameters:dict];
-}
+   }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [self.buttonStealer stopStealingVolumeButtonEvents];
+}
+
+-(void) prepareTextField
+{
+   
+    NSMutableArray *locationArray = [[NSMutableArray alloc] init];
+    for(Locations *locations in [self.userData locations])
+    {
+        [locationArray addObject:locations.locationName];
+    }
+    [self.txtLocations setItemList:[[NSArray alloc] initWithArray:locationArray]];
 }
 
 - (void)prepareButtonStealer
@@ -190,6 +208,8 @@ int processedIndex;
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     [dict setObject:userId forKey:@"user_id"];
     [dict setObject:quadratic forKey:@"walk_model_id"];
+    [dict setObject:self.locationId forKey:@"starting_point_id"];
+    [dict setObject:self.mapId forKey:@"map_id"];
     NSMutableDictionary *walkDict = [[NSMutableDictionary alloc] init];
     [walkDict setObject:dict forKey:@"walk"];
     return walkDict;
@@ -222,6 +242,7 @@ int processedIndex;
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
         //Do any updates to your label here
         self.btnStartStop.titleLabel.text = @"Start";
+         self.btnStartStop.alpha = 0;
     }];
 
 }
@@ -231,7 +252,9 @@ int processedIndex;
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
         //Do any updates to your label here
         self.btnStartStop.titleLabel.text = @"Stop";
+        self.btnStartStop.alpha = 1;
     }];
+    
     self.readingsData = @"";
     self.elapsedTimestamps = [[NSMutableArray alloc] init];
     self.anglesMeasured = [[NSMutableArray alloc] init];
@@ -268,8 +291,10 @@ int processedIndex;
     double Y;
     Y = A * X * X + B * X + C;
     totalDistance += Y;
-    if(Y < 2.5 || Y > 7.5)
-        Y = 5.0;
+    
+    // Commented below to disable distance correction
+//    if(Y < 2.5 || Y > 7.5)
+//        Y = 5.0;
     return Y;
 }
 
@@ -326,8 +351,13 @@ int processedIndex;
         [eachData setValue: [totalData valueForKey:@"created_at"] forKey:@"created_at"];
         [eachData setValue: [totalData valueForKey:@"bib_uuid"] forKey:@"bib_uuid"];
 
-        NSError *error;
-        [context save:&error];
+    
+    if (![[NSThread currentThread] isMainThread]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSError *error;
+            [context save:&error];;
+        });
+    }
     
 }
 
@@ -356,7 +386,6 @@ int processedIndex;
         self.totalDataList = [[NSMutableArray alloc] init];
         for (NSManagedObject *eachObect in results)
         {
-           
            
             self.totalDataDictionary = [[NSMutableDictionary alloc] init];
             if(![[eachObect valueForKey:@"bib_uuid"] isEqualToString:@""])
@@ -543,6 +572,8 @@ int processedIndex;
     if(walkData)
     {
         [self saveWalkId:walkData];
+        self.btnStartStop.alpha = 1;
+
     }
     else
     {
@@ -561,6 +592,45 @@ int processedIndex;
 {
     [self.defaults setObject:walkid  forKey:@"walkId"];
     self.walkId = walkid;
+}
+
+#pragma UITextFieldDelegate Methods
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    if(![textField.text isEqualToString:@""])
+    {
+        
+        [self getMapIdAndLocationId:textField.text];
+        NSMutableDictionary * dict = [self prepareParametersToInitiateWalk];
+        [self.serviceManager postRequestCallWithURL:@"http://128.82.5.142:8080/walks" andParameters:dict];
+  
+    }
+    else
+    {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Location is Invalid"
+                                                            message:@"Please select Location"
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Ok"
+                                                  otherButtonTitles:nil, nil];
+        //[alertView setDelegate:self];
+        [alertView show];
+    }
+    
+}
+
+-(void) getMapIdAndLocationId:(NSString *) locationName
+{
+   
+    for(Locations *location in self.userData.locations)
+    {
+        if([location.locationName isEqualToString:locationName])
+        {
+            self.locationId = location.locationId;
+            self.mapId = location.mapId;
+        }
+    }
+    
 }
 
 @end

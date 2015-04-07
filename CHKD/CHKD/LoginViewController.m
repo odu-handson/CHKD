@@ -9,6 +9,9 @@
 #import "LoginViewController.h"
 #import "ServiceManager.h"
 #import "HomeViewController.h"
+#import "UserData.h"
+#import "Locations.h"
+
 
 @interface LoginViewController ()<ServiceProtocol>
 
@@ -21,13 +24,21 @@
 @property (nonatomic, strong) HomeViewController    *homeViewController;
 @property (nonatomic, strong) NSUserDefaults *defaults;
 @property (nonatomic,strong) NSString *userId;
-
-
+@property (nonatomic, strong) UserData *userData;
 
 @end
 
 @implementation LoginViewController
 
+
+
+- (UserData *)userData
+{
+    if(!_userData)
+        _userData = [UserData sharedData];
+    
+    return _userData;
+}
 
 - (ServiceManager *)serviceManager
 {
@@ -151,11 +162,14 @@
     if([success boolValue ]== 1)
     {
         [self saveUserId:userId];
+        
+        [self saveUserCalibration:[serviceResponse valueForKey:@"user_calibrations"]];
+        [self saveStartingPoints:[serviceResponse valueForKey:@"starting_points"]];
+        
         UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
         self.homeViewController = (HomeViewController *) [storyBoard instantiateViewControllerWithIdentifier:@"HomeViewController"];
         [self.navigationController pushViewController:self.homeViewController animated:YES];
     }
-   
 }
 
 - (void)serviceCallCompletedWithError:(NSError *)error
@@ -167,6 +181,39 @@
 {
     [self.defaults setObject:userId  forKey:@"user_id"];
     self.userId = userId;
+}
+
+-(void) saveUserCalibration:(NSMutableDictionary *) userCalibration
+{
+   for(NSDictionary *eachDict in userCalibration)
+   {
+       
+       NSInteger walkModelId = [(NSString *)[eachDict valueForKey:@"walk_model_id"] integerValue];
+       
+       
+       if(walkModelId == 2)
+       {
+           [self.userData setA:[(NSString *)[eachDict valueForKey:@"a"] doubleValue]];
+           [self.userData setB:[(NSString *)[eachDict valueForKey:@"b"] doubleValue]];
+           [self.userData setC:[(NSString *)[eachDict valueForKey:@"c"] doubleValue]];
+           [self.userData saveUpdatedAt:(NSDate *)[eachDict valueForKey:@"updated_at"]];
+           [self.userData saveCreatedAt:(NSDate *)[eachDict valueForKey:@"created_at"]];
+       }
+   }
+}
+
+-(void) saveStartingPoints:(NSMutableDictionary *) startingPoints
+{
+    
+    self.userData.locations = [[NSMutableArray alloc] init];
+    for(NSDictionary *eachDict in startingPoints)
+    {
+        Locations *location = [[Locations alloc] init];
+        location.locationId = [eachDict valueForKey:@"id"];
+        location.mapId = [eachDict valueForKey:@"map_id"];
+        location.locationName = [eachDict valueForKey:@"name"];
+        [self.userData.locations addObject:location];
+    }
 }
 /*
 #pragma mark - Navigation
