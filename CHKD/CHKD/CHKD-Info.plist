@@ -2,20 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>For CHKD </string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
-	<key>CFBundleIcons</key>
-	<dict/>
 	<key>CFBundleIconFiles</key>
 	<array>
 		<string></string>
 	</array>
+	<key>CFBundleIcons</key>
+	<dict/>
 	<key>CFBundleIcons~ipad</key>
 	<dict/>
 	<key>CFBundleIdentifier</key>
@@ -32,8 +30,28 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
+	<key>Fabric</key>
+	<dict>
+		<key>APIKey</key>
+		<string>dfda912f2eed08069e93fb15fffe5e0d63d12a05</string>
+		<key>Kits</key>
+		<array>
+			<dict>
+				<key>KitInfo</key>
+				<dict/>
+				<key>KitName</key>
+				<string>Crashlytics</string>
+			</dict>
+		</array>
+	</dict>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>For CHKD </string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>App plays audio</string>
+	</array>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -43,10 +61,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-	</array>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>App plays audio</string>
 	</array>
 </dict>
 </plist>

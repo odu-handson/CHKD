@@ -33,7 +33,7 @@
 @property (nonatomic, weak) IBOutlet UIButton   *btnStartStop;
 @property (nonatomic, weak) IBOutlet UILabel    *lblTotalDistance;
 @property (weak, nonatomic) IBOutlet  IQDropDownTextField *txtLocations;
-
+@property (weak, nonatomic) IBOutlet UILabel *showSelectLabel;
 
 @property (nonatomic, strong) NSString          *locationId;
 @property (nonatomic, strong) NSString          *mapId;
@@ -55,6 +55,7 @@
 
 @property (nonatomic, strong) NSUserDefaults *defaults;
 @property (nonatomic,strong) NSString *walkId;
+@property BOOL isPaused;
 
 @end
 
@@ -144,6 +145,8 @@ int processedIndex;
         [locationArray addObject:locations.locationName];
     }
     [self.txtLocations setItemList:[[NSArray alloc] initWithArray:locationArray]];
+    
+    [self.txtLocations becomeFirstResponder];
 }
 
 - (void)prepareButtonStealer
@@ -202,6 +205,36 @@ int processedIndex;
     self.isCountingSteps = !self.isCountingSteps;
 }
 
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+
+{
+    NSUInteger numTaps = [[touches anyObject] tapCount];
+    float delay = 0.2;
+    if(numTaps == 2)
+    {
+        [self toogleIsPaused];
+        [NSObject cancelPreviousPerformRequestsWithTarget:self];
+        [self performSelector:@selector(handleDoubleTap) withObject:nil afterDelay:delay ];
+    }
+}
+-(void) handleDoubleTap
+{
+    if(_isPaused)
+    {
+        [self stopMonitorBeacons];
+        [self stopCountingSteps];
+        self.showSelectLabel.text =@"Paused.Please Select Location";
+        
+    }
+    else
+    {
+        [self startCoutingAfterPaused];
+        [self monitorBeacons];
+        self.showSelectLabel.text =@"Select Starting Location";
+    }
+    
+}
+
 -(NSMutableDictionary *) prepareParametersToInitiateWalk
 {
     NSString *userId = [self.defaults valueForKey:@"user_id"];
@@ -231,6 +264,19 @@ int processedIndex;
     }
 }
 
+-(void) stopMonitorBeacons
+{
+    
+    for(id key in self.beaconDetails.beaconsList)
+    {
+        CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:[self.beaconDetails.beaconsList valueForKey:key] identifier:key];
+        [self.appDelegate.locationManager stopMonitoringForRegion:beaconRegion];
+        [self.appDelegate.locationManager stopRangingBeaconsInRegion:beaconRegion];
+        [self.appDelegate.locationManager stopUpdatingLocation];
+    }
+    
+}
+
 - (void)stopCountingSteps
 {
     [self.motionManager stopCountingSteps];
@@ -251,7 +297,8 @@ int processedIndex;
 {
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
         //Do any updates to your label here
-        self.btnStartStop.titleLabel.text = @"Stop";
+        if(!_isPaused)
+            self.btnStartStop.titleLabel.text = @"Stop";
         self.btnStartStop.alpha = 1;
     }];
     
@@ -263,7 +310,16 @@ int processedIndex;
     [self.motionManager startCountingSteps];
     
 }
+-(void) startCoutingAfterPaused
+{
+    self.readingsData = @"";
+    self.elapsedTimestamps = [[NSMutableArray alloc] init];
+    self.anglesMeasured = [[NSMutableArray alloc] init];
+    self.sampleSizes = [[NSMutableArray alloc] init];
+    [self prepareTimer];
+    [self.motionManager startCountingSteps];
 
+}
 
 
 #pragma mark - Computing Distance
@@ -359,6 +415,18 @@ int processedIndex;
         });
     }
     
+}
+
+-(void) flushDatabase{
+   
+    NSError *error = nil;
+    NSManagedObjectContext *managedObjectContext = [self.appDelegate managedObjectContext];
+    NSArray *stores = [self.appDelegate.persistentStoreCoordinator  persistentStores];
+    for(NSPersistentStore *store in stores) {
+        [self.appDelegate.persistentStoreCoordinator  removePersistentStore:store error:nil];
+        [[NSFileManager defaultManager] removeItemAtPath:store.URL.path error:nil];
+    }
+    [self.appDelegate persistentStoreCoordinator];
 }
 
 -(void) fetchDetailsFromPersistance
@@ -548,7 +616,7 @@ int processedIndex;
     for(int i=0;i<beacons.count;i++)
     {
         CLBeacon *beaconObj = beacons[i];
-       if(beaconObj.rssi > -60)
+       if(beaconObj.rssi > -70)
        {
            self.totalDataDictionary = [[NSMutableDictionary alloc] init];
            [self.totalDataDictionary setValue:@"" forKey:@"angle"];
@@ -559,6 +627,7 @@ int processedIndex;
            [self saveDatatToPersistance:self.totalDataDictionary];
            [self.totalDataList addObject:self.totalDataDictionary];
        }
+        NSLog(@"Beacon UDID:%@\n",beaconObj.proximityUUID.UUIDString);
         NSLog(@"Beacon Detected:zxczxcZXc %ld\n",(long)beaconObj.rssi);//instead of logging trigger an event to report to server.
     }
 }
@@ -577,7 +646,7 @@ int processedIndex;
     }
     else
     {
-        
+        [self flushDatabase];
         
     }
     
@@ -586,6 +655,14 @@ int processedIndex;
 - (void)serviceCallCompletedWithError:(NSError *)error
 {
     
+}
+
+-(void) toogleIsPaused
+{
+    if(_isPaused)
+        _isPaused = NO;
+    else
+        _isPaused = YES;
 }
 
 - (void)saveWalkId:(NSString *)walkid
@@ -601,10 +678,12 @@ int processedIndex;
     if(![textField.text isEqualToString:@""])
     {
         
-        [self getMapIdAndLocationId:textField.text];
-        NSMutableDictionary * dict = [self prepareParametersToInitiateWalk];
-        [self.serviceManager postRequestCallWithURL:@"http://128.82.5.142:8080/walks" andParameters:dict];
-  
+        if(!_isPaused)
+        {
+            [self getMapIdAndLocationId:textField.text];
+            NSMutableDictionary * dict = [self prepareParametersToInitiateWalk];
+            [self.serviceManager postRequestCallWithURL:@"http://128.82.5.142:8080/walks" andParameters:dict];
+        }  
     }
     else
     {

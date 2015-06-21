@@ -45,6 +45,8 @@
 		CAFAD90E19C898DB007648C1 /* TrainingInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CAFAD90D19C898DB007648C1 /* TrainingInfo.m */; };
 		DA0C3A9B1AD375DB000BB30E /* Locations.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0C3A9A1AD375DB000BB30E /* Locations.m */; };
 		DA0C3A9F1AD3789D000BB30E /* IQDropDownTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0C3A9E1AD3789D000BB30E /* IQDropDownTextField.m */; };
+		DA0CFB661B279DF900A14C33 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA0CFB641B279DF900A14C33 /* Fabric.framework */; };
+		DA0CFB671B279DF900A14C33 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA0CFB651B279DF900A14C33 /* Crashlytics.framework */; };
 		DA84A5291A9AC57F00C192CF /* chkd.png in Resources */ = {isa = PBXBuildFile; fileRef = DA84A5281A9AC57F00C192CF /* chkd.png */; };
 		DA84A52C1A9ADEB100C192CF /* RegistrationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DA84A52B1A9ADEB100C192CF /* RegistrationTableViewCell.m */; };
 		DA84A52E1A9C0FC400C192CF /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA84A52D1A9C0FC400C192CF /* CoreData.framework */; };
@@ -129,6 +131,8 @@
 		DA0C3A9A1AD375DB000BB30E /* Locations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Locations.m; sourceTree = "<group>"; };
 		DA0C3A9D1AD3789D000BB30E /* IQDropDownTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQDropDownTextField.h; sourceTree = "<group>"; };
 		DA0C3A9E1AD3789D000BB30E /* IQDropDownTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQDropDownTextField.m; sourceTree = "<group>"; };
+		DA0CFB641B279DF900A14C33 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = SOURCE_ROOT; };
+		DA0CFB651B279DF900A14C33 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = SOURCE_ROOT; };
 		DA84A5281A9AC57F00C192CF /* chkd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chkd.png; sourceTree = "<group>"; };
 		DA84A52A1A9ADEB100C192CF /* RegistrationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegistrationTableViewCell.h; sourceTree = "<group>"; };
 		DA84A52B1A9ADEB100C192CF /* RegistrationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegistrationTableViewCell.m; sourceTree = "<group>"; };
@@ -156,8 +160,10 @@
 				411B72081A4536BD0061D848 /* GLKit.framework in Frameworks */,
 				41FF33421A27A58400D7D54F /* CoreAudio.framework in Frameworks */,
 				41FF33401A27A56F00D7D54F /* MediaPlayer.framework in Frameworks */,
+				DA0CFB671B279DF900A14C33 /* Crashlytics.framework in Frameworks */,
 				CAE7E8F419FDD3FC007C8F70 /* AudioToolbox.framework in Frameworks */,
 				CACDB8BF19C75746001F9ABD /* CoreMotion.framework in Frameworks */,
+				DA0CFB661B279DF900A14C33 /* Fabric.framework in Frameworks */,
 				CACDB88C19C74875001F9ABD /* CoreGraphics.framework in Frameworks */,
 				CACDB88E19C74875001F9ABD /* UIKit.framework in Frameworks */,
 				CACDB88A19C74875001F9ABD /* Foundation.framework in Frameworks */,
@@ -258,6 +264,8 @@
 		CACDB88F19C74875001F9ABD /* CHKD */ = {
 			isa = PBXGroup;
 			children = (
+				DA0CFB641B279DF900A14C33 /* Fabric.framework */,
+				DA0CFB651B279DF900A14C33 /* Crashlytics.framework */,
 				DA0C3A9C1AD3789D000BB30E /* IQDropDownTextField */,
 				DA84A5271A9AC57F00C192CF /* Images */,
 				CA7CFFB11A92F0DD003E12C6 /* Bluetooth */,
@@ -407,6 +415,7 @@
 				CACDB88319C74875001F9ABD /* Frameworks */,
 				CACDB88419C74875001F9ABD /* Resources */,
 				3A2C86C405B4BDEF46F039E4 /* Copy Pods Resources */,
+				DA0CFB631B279DC000A14C33 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -445,7 +454,7 @@
 				ORGANIZATIONNAME = "Old Dominion University";
 				TargetAttributes = {
 					CACDB88519C74875001F9ABD = {
-						DevelopmentTeam = 93ENHAK6D6;
+						DevelopmentTeam = Y3BMC87S4X;
 					};
 					CACDB8A619C74875001F9ABD = {
 						DevelopmentTeam = 93ENHAK6D6;
@@ -530,6 +539,19 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
+		};
+		DA0CFB631B279DC000A14C33 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run dfda912f2eed08069e93fb15fffe5e0d63d12a05 8a658c7884f0bccbedc93774bc84c9fb370682c6fd1f292559bb59fa9dddc67f";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -687,6 +709,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CHKD/CHKD-Prefix.pch";
 				INFOPLIST_FILE = "CHKD/CHKD-Info.plist";
@@ -705,6 +731,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "CHKD/CHKD-Prefix.pch";
 				INFOPLIST_FILE = "CHKD/CHKD-Info.plist";

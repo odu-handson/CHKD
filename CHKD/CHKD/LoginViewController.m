@@ -191,14 +191,19 @@
        NSInteger walkModelId = [(NSString *)[eachDict valueForKey:@"walk_model_id"] integerValue];
        
        
+       // Temporaryly changing float to double.
        if(walkModelId == 2)
        {
-           [self.userData setA:[(NSString *)[eachDict valueForKey:@"a"] doubleValue]];
-           [self.userData setB:[(NSString *)[eachDict valueForKey:@"b"] doubleValue]];
-           [self.userData setC:[(NSString *)[eachDict valueForKey:@"c"] doubleValue]];
-           [self.userData saveUpdatedAt:(NSDate *)[eachDict valueForKey:@"updated_at"]];
-           [self.userData saveCreatedAt:(NSDate *)[eachDict valueForKey:@"created_at"]];
-       }
+           double aValue = (double)[(NSString *)[eachDict valueForKey:@"a"] floatValue];
+           
+           NSNumber *aValues = [NSNumber numberWithDouble:aValue];
+           double finalA = [aValues doubleValue];
+           
+           [self.userData saveA:finalA];
+           self.userData.A = 0.2233;
+           [self.userData saveB: (double)[(NSString *)[eachDict valueForKey:@"b"] floatValue]];
+           [self.userData saveC:(double)[(NSString *)[eachDict valueForKey:@"c"] floatValue]];
+        }
    }
 }
 

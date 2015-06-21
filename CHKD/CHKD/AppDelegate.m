@@ -12,10 +12,7 @@
 
 @interface AppDelegate()
 
-
 @property (nonatomic, strong, readonly) NSManagedObjectModel *managedObjectModel;
-
-@property (nonatomic, strong, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 @end
 
@@ -26,7 +23,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
-    
+    [Fabric with:@[CrashlyticsKit]];
     
     self.locationManager = [[CLLocationManager alloc] init];
     if([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
@@ -35,7 +32,6 @@
     [self deleteAllObjects:@"RawData"];
     //[self deleteAllObjects:@"WalkData"];
 
-    
     return YES;
 }
 							
@@ -95,6 +91,7 @@
     NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
     if (coordinator != nil) {
         _managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+        [_managedObjectContext setRetainsRegisteredObjects:YES];
         [_managedObjectContext setPersistentStoreCoordinator: coordinator];
     }
     return _managedObjectContext;
@@ -176,6 +173,7 @@
     
     return _persistentStoreCoordinator;
 }
+
 - (void) deleteAllObjects: (NSString *) entityDescription  {
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:entityDescription inManagedObjectContext:[self managedObjectContext]];
@@ -183,8 +181,6 @@
     
     NSError *error;
     NSArray *items = [_managedObjectContext executeFetchRequest:fetchRequest error:&error];
-   
-    
     
     for (NSManagedObject *managedObject in items) {
         [_managedObjectContext deleteObject:managedObject];
@@ -202,7 +198,5 @@
 {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
-
-
 
 @end
